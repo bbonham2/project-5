@@ -1,19 +1,18 @@
 //jshint esversion: 6
-// Adds endpoint for HTTP Post request
+//Adds Post data to db in server
 
 // initialize
-
 const port = 8888,
   bodyParser = require("body-parser"),
   express = require("express"),
-  app = express();
-
-/*
-app.use(express.urlencoded({
-  extended: true
-}));
-app.use(express.json());
-*/
+  app = express(),
+  db = [
+    {
+      id: 1,
+      name: "Argus Filch",
+      number: "800-Hog-Wart"
+    }
+  ];
 
 //if the client directory contains an "index.html" web page
 //  it will be displayed as the default document
@@ -29,26 +28,30 @@ app.use((req, res, next) => {
   next();
 });
 
-//Simple route handle to test a Post request endpoint
-//test it with Postwoman.io or Postman app
-app.post("/addnum", (req, res) => {
-  const telnum = {
-    name: req.body.name,
-    number: req.body.number
-  };
-  return res.status(201).send({
+// endpoint to Get all tel numbers
+app.get("/telnums", (req, res) => {
+  res.status(200).send({
     success: "true",
-    message: "new number added",
-    telnum
+    message: "tel numbers retrieved successfully",
+    tel_nums: db
   });
 });
 
-// /hello/ route, an HTTP GET request
-app.get("/hello/:name?", (req, res) =>
-  res.json({
-    message: `Hello ${req.params.name || "world"}!`
-  })
-);
+//Post request endpoint
+//test it with Postman app
+app.post("/addnum", (req, res) => {
+  const telnum = {
+    id: db.length + 1,
+    name: req.body.name,
+    number: req.body.number
+  };
+  db.push(telnum); //add record to local db
+  return res.status(201).send({
+    success: "true",
+    message: "Telephone Number added successfully",
+    telnum
+  });
+});
 
 // start server
 app.listen(port, () => {
