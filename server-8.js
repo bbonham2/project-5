@@ -1,5 +1,6 @@
 //jshint esversion: 6
-//Adds endpoint to Get a single tel number
+//Adds endpoint to Delete a single tel number
+
 // initialize
 
 const port = 8888,
@@ -77,6 +78,25 @@ app.get("/telnum/:id", (req, res, next) => {
   return res.status(404).send({
     success: "false",
     message: "telphone number does not exist"
+  });
+});
+
+//Endpoint to Delete a single tel number
+app.delete("/deletenum/:id", (req, res) => {
+  const id = parseInt(req.params.id, 10);
+
+  db.map((telnum, index) => {
+    if (telnum.id === id) {
+      db.splice(index, 1);
+      return res.status(200).send({
+        success: "true",
+        message: "Telephone number deleted successfuly"
+      });
+    }
+  });
+  return res.status(404).send({
+    success: "false",
+    message: "Telephone number not found"
   });
 });
 
